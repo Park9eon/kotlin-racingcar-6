@@ -89,20 +89,29 @@ class ApplicationTest : NsTest() {
         }
     }
 
-    @ValueSource(strings = ["", " ", "  ", "   ", "\n", "\t"])
+    @ValueSource(strings = [" ", "  ", "   ", "\n", "\t"])
     @ParameterizedTest
     fun `첫 입력에서 공백을 입력한 경우에 대한 예외처리`(value: String) {
         assertSimpleTest {
-            assertThrows<IllegalArgumentException>("경주할 자동차 이름을 입력해주세요.") { runException(value) }
+            assertThrows<IllegalArgumentException>("경주할 자동차 이름들을 올바르게 입력해주세요.") { runException(value) }
             assertThat(output()).isEqualTo("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)")
         }
     }
 
-    @ValueSource(strings = ["javaji", ",", ",pobi", "pobi,javaji"])
+    @ValueSource(strings = ["javaji", "pobi,javaji"])
     @ParameterizedTest
-    fun `첫 입력에서 이름에 대한 예외처리`(value: String) {
+    fun `첫 입력에서 이름에 대한 예외처리 - 5자리 초과`(value: String) {
         assertSimpleTest {
-            assertThrows<IllegalArgumentException>("경주할 자동차 이름을 올바르게 입력해주세요.") { runException(value) }
+            assertThrows<IllegalArgumentException>("경주할 자동차 이름을 올바르게 입력해주세요. (1~5자) ==> javaji") { runException(value) }
+            assertThat(output()).contains("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)")
+        }
+    }
+
+    @ValueSource(strings = [",", "pobi,"])
+    @ParameterizedTest
+    fun `첫 입력에서 이름에 대한 예외처리 - 공백`(value: String) {
+        assertSimpleTest {
+            assertThrows<IllegalArgumentException>("경주할 자동차 이름을 올바르게 입력해주세요. (1~5자) ==> ") { runException(value) }
             assertThat(output()).contains("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)")
         }
     }
@@ -116,11 +125,11 @@ class ApplicationTest : NsTest() {
         }
     }
 
-    @ValueSource(strings = ["", " ", "  ", "   ", "\n", "\t"])
+    @ValueSource(strings = [" ", "  ", "   ", "\n", "\t"])
     @ParameterizedTest
     fun `두번째 입력이 공백인 것에 대한 예외처리`(value: String) {
         assertSimpleTest {
-            assertThrows<IllegalArgumentException>("시도할 횟수를 입력해주세요.") { runException("pobi", value) }
+            runException("pobi", value)
             assertThat(output()).contains("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)", "시도할 횟수는 몇 회인가요?")
         }
     }
