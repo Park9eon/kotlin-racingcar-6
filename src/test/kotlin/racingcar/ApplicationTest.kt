@@ -84,7 +84,7 @@ class ApplicationTest : NsTest() {
     @Test
     fun `입력이 없는 경우`() {
         assertSimpleTest {
-            assertThrows<IllegalArgumentException>("경주할 자동차 이름을 입력해주세요.") { runException() }
+            runException()
             assertThat(output()).isEqualTo("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)")
         }
     }
@@ -111,7 +111,7 @@ class ApplicationTest : NsTest() {
     @ParameterizedTest
     fun `첫 입력만 한 경우에 대한 예외처리`(value: String) {
         assertSimpleTest {
-            assertThrows<IllegalArgumentException>("시도할 횟수를 입력해주세요.") { runException(value) }
+            runException(value)
             assertThat(output()).contains("경주할 자동차 이름을 입력하세요.(이름은 쉼표(,) 기준으로 구분)", "시도할 횟수는 몇 회인가요?")
         }
     }
